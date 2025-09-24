@@ -14,8 +14,8 @@ import { PortableText } from "next-sanity";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
+const SingleBlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
   const blog: SINGLE_BLOG_QUERYResult = await getSingleBlog(slug);
   if (!blog) return notFound();
 
