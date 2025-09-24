@@ -31,7 +31,8 @@ const HomeCategories = ({ categories }: { categories: Category[] }) => {
               <h3>{category?.title}</h3>
               <p className="text-sm">
                 <span className="font-bold text-kitenge-red">
-                  {`(${category?.productCount})`}
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {`(${(category as any)?.productCount || 0})`}
                 </span>{" "}
                 items available
               </p>

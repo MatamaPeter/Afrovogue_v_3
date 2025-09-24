@@ -301,7 +301,6 @@ const Shop = ({ categories, brands }: Props) => {
                     <ProductCard
                       key={product?._id}
                       product={product}
-                      variant={viewMode}
                     />
                   ))}
                 </div>

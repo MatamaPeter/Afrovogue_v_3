@@ -11,8 +11,14 @@ import { FiShare2 } from "react-icons/fi";
 import { RxBorderSplit } from "react-icons/rx";
 import { TbTruckDelivery } from "react-icons/tb";
 
-const SingleProductPage = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
+// Define the props interface for Next.js 15
+interface PageProps {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+const SingleProductPage = async ({ params }: PageProps) => {
+  const { slug } = await params;
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -52,9 +58,7 @@ const SingleProductPage = async ({ params }: { params: { slug: string } }) => {
                   />
                 ))}
               </div>
-              <p className="text-sm font-medium text-gray-700">
-                (120 reviews)
-              </p>
+              <p className="text-sm font-medium text-gray-700">(120 reviews)</p>
             </div>
           </div>
 
@@ -72,7 +76,9 @@ const SingleProductPage = async ({ params }: { params: { slug: string } }) => {
                   : "bg-green-100/80 text-green-700"
               }`}
             >
-              {(product.stock ?? 0) > 0 ? "In Stock • Ready to ship" : "Out of Stock"}
+              {(product.stock ?? 0) > 0
+                ? "In Stock • Ready to ship"
+                : "Out of Stock"}
             </span>
           </div>
 

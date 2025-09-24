@@ -87,7 +87,7 @@ const LatestBlog = async () => {
                       {item?.title}
                     </span>
                   ))}
-                  {blog?.blogcategories?.length > 2 && (
+                  {blog?.blogcategories && blog.blogcategories.length > 2 && (
                     <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                       +{blog.blogcategories.length - 2}
                     </span>
@@ -106,7 +106,7 @@ const LatestBlog = async () => {
               </Link>
 
               {/* Excerpt from body content */}
-              {blog?.body?.[0]?.children?.[0]?.text && (
+              {blog?.body?.[0] && 'children' in blog.body[0] && blog.body[0].children?.[0]?.text && (
                 <p className="text-gray-600 text-sm line-clamp-3 mb-5 leading-relaxed">
                   {blog.body[0].children[0].text}
                 </p>
