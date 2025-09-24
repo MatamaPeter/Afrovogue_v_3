@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react"
 import { Product } from "../../sanity.types";
