@@ -905,18 +905,12 @@ export type SINGLE_BLOG_QUERYResult = {
   }>;
 } | null;
 // Variable: BLOG_CATEGORIES
-// Query: *[_type == "blog"]{     blogcategories[]->{    ...    }  }
+// Query: *[_type == "blogcategory"] | order(title asc){    title,    slug,    description,    "blogCount": count(*[_type == "blog" && references(^._id)])  }
 export type BLOG_CATEGORIESResult = Array<{
-  blogcategories: Array<{
-    _id: string;
-    _type: "blogcategory";
-    _createdAt: string;
-    _updatedAt: string;
-    _rev: string;
-    title?: string;
-    slug?: Slug;
-    description?: string;
-  }> | null;
+  title: string | null;
+  slug: Slug | null;
+  description: string | null;
+  blogCount: number;
 }>;
 // Variable: OTHERS_BLOG_QUERY
 // Query: *[  _type == "blog"  && defined(slug.current)  && slug.current != $slug]|order(publishedAt desc)[0...$quantity]{...  publishedAt,  title,  mainImage,  slug,  author->{    name,    image,  },  categories[]->{    title,    "slug": slug.current,  }}
@@ -966,7 +960,7 @@ declare module "@sanity/client" {
     "\n  *[_type == 'blog'] | order(publishedAt desc){\n    ...,  \n    blogcategories[]->{\n      title\n    }\n  }\n": GET_ALL_BLOGResult;
     "\n  *[_type == 'blog'] | order(publishedAt desc)[0...$quantity]{\n    ...,  \n    blogcategories[]->{\n      title\n    }\n  }\n": GET_LIMITED_BLOGResult;
     "*[_type == \"blog\" && slug.current == $slug][0]{\n  ..., \n    author->{\n    name,\n    image,\n  },\n  blogcategories[]->{\n    title,\n    \"slug\": slug.current,\n  },\n}": SINGLE_BLOG_QUERYResult;
-    "*[_type == \"blog\"]{\n     blogcategories[]->{\n    ...\n    }\n  }": BLOG_CATEGORIESResult;
+    "*[_type == \"blogcategory\"] | order(title asc){\n    title,\n    slug,\n    description,\n    \"blogCount\": count(*[_type == \"blog\" && references(^._id)])\n  }": BLOG_CATEGORIESResult;
     "*[\n  _type == \"blog\"\n  && defined(slug.current)\n  && slug.current != $slug\n]|order(publishedAt desc)[0...$quantity]{\n...\n  publishedAt,\n  title,\n  mainImage,\n  slug,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    \"slug\": slug.current,\n  }\n}": OTHERS_BLOG_QUERYResult;
   }
 }

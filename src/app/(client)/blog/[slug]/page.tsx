@@ -1,6 +1,6 @@
 import Container from "@/components/Container";
 import { Title } from "@/components/ui/text";
-import { SINGLE_BLOG_QUERYResult } from "../../../../../sanity.types";
+import { SINGLE_BLOG_QUERYResult, Slug } from "../../../../../sanity.types";
 import {
   getBlogCategories,
   getOthersBlog,
@@ -46,7 +46,7 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
                 (item: { title: string | null }, index: number) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-kitenge-green/10 text-kitenge-green text-xs font-semibold rounded-full border border-kitenge-green/20"
+                    className="px-3 py-1 bg-kitenge-red/10 text-kitenge-red text-xs font-semibold rounded-full border border-kitenge-red/20"
                   >
                     {item?.title || "Untitled"}
                   </span>
@@ -55,7 +55,7 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
             </div>
 
             {/* Author */}
-            <div className="flex items-center gap-2 text-kitenge-indigo">
+            <div className="flex items-center gap-2 text-gray-800">
               <Pencil size={16} />
               <span className="text-sm font-medium">{blog?.author?.name}</span>
             </div>
@@ -70,20 +70,20 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-4xl font-bold text-kitenge-indigo mb-8 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 leading-tight">
             {blog?.title}
           </h1>
 
           {/* Content */}
           <article className="prose prose-lg max-w-none">
-            <div className="text-kitenge-indigo/90">
+            <div className="text-gray-800/90">
               {blog.body && (
                 <PortableText
                   value={blog.body}
                   components={{
                     block: {
                       normal: ({ children }) => (
-                        <p className="my-6 text-base/7 text-kitenge-indigo/90 first:mt-0 last:mb-0">
+                        <p className="my-6 text-base/7 text-gray-800/90 first:mt-0 last:mb-0">
                           {children}
                         </p>
                       ),
@@ -98,7 +98,7 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
                         </h3>
                       ),
                       blockquote: ({ children }) => (
-                        <blockquote className="my-6 border-l-4 border-kitenge-gold pl-6 bg-kitenge-cream/30 py-4 rounded-r-lg text-kitenge-indigo italic first:mt-0 last:mb-0">
+                        <blockquote className="my-6 border-l-4 border-kitenge-gold pl-6 bg-kitenge-cream/30 py-4 rounded-r-lg text-gray-800 italic first:mt-0 last:mb-0">
                           {children}
                         </blockquote>
                       ),
@@ -143,14 +143,14 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
                     listItem: {
                       bullet: ({ children }) => {
                         return (
-                          <li className="pl-2 text-kitenge-indigo/90">
+                          <li className="pl-2 text-gray-800/90">
                             {children}
                           </li>
                         );
                       },
                       number: ({ children }) => {
                         return (
-                          <li className="pl-2 text-kitenge-indigo/90">
+                          <li className="pl-2 text-gray-800/90">
                             {children}
                           </li>
                         );
@@ -187,7 +187,7 @@ const SingleBlogPage = async ({ params }: { params: { slug: string } }) => {
             <div className="mt-12 pt-8 border-t border-kitenge-gold/20">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 text-kitenge-indigo hover:text-kitenge-red font-semibold group transition-colors duration-200"
+                className="inline-flex items-center gap-2 text-gray-800 hover:text-kitenge-red font-semibold group transition-colors duration-200"
               >
                 <ChevronLeftIcon className="size-5 transform group-hover:-translate-x-1 transition-transform" />
                 <span>Back to all articles</span>
@@ -217,25 +217,35 @@ const BlogSidebar = async ({ slug }: { slug: string }) => {
           Blog Categories
         </Title>
         <div className="space-y-3">
-          {categories?.map((cat: { title: string; slug: { current: string }; description?: string }, index: number) => (
-            <div
-              key={index}
-              className="flex items-center justify-between py-2 border-b border-kitenge-cream last:border-b-0 group cursor-pointer"
-            >
-              <span className="text-kitenge-indigo group-hover:text-kitenge-red transition-colors duration-200 font-medium">
-                {cat?.title}
-              </span>
-              <span className="bg-kitenge-red text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                1
-              </span>
-            </div>
-          ))}
+          {categories?.map(
+            (
+              cat: {
+                title: string | null;
+                slug: Slug | null;
+                description: string | null;
+                blogCount: number;
+              },
+              index: number
+            ) => (
+              <div
+                key={index}
+                className="flex items-center justify-between py-2 border-b border-kitenge-cream last:border-b-0 group cursor-pointer"
+              >
+                <span className="text-gray-800 group-hover:text-kitenge-red transition-colors duration-200 font-medium">
+                  {cat?.title || "Untitled"}
+                </span>
+                <span className="bg-kitenge-red text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                  {cat?.blogCount || 0}
+                </span>
+              </div>
+            )
+          )}
         </div>
       </div>
 
       {/* Latest Blogs */}
       <div className="bg-white rounded-2xl shadow-sm border border-kitenge-cream p-6">
-        <Title className="text-lg font-bold text-kitenge-green mb-4">
+        <Title className="text-lg font-bold text-kitenge-red mb-4">
           Latest Articles
         </Title>
         <div className="space-y-4">
@@ -258,7 +268,7 @@ const BlogSidebar = async ({ slug }: { slug: string }) => {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-kitenge-indigo line-clamp-2 group-hover:text-kitenge-red transition-colors duration-200">
+                <p className="text-sm font-medium text-gray-800 line-clamp-2 group-hover:text-kitenge-red transition-colors duration-200">
                   {blog?.title}
                 </p>
                 <div className="flex items-center gap-1 mt-1">

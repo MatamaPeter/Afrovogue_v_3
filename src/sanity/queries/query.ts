@@ -69,7 +69,8 @@ const BLOG_CATEGORIES = defineQuery(
   `*[_type == "blogcategory"] | order(title asc){
     title,
     slug,
-    description
+    description,
+    "blogCount": count(*[_type == "blog" && references(^._id)])
   }`
 );
 
