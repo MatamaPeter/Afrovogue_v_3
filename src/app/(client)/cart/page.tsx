@@ -28,6 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { createCheckoutSession, Metadata } from "../../../../actions/createCheckoutSession";
+import AddAddressDialog from "@/components/AddAddressDialog";
 
 const CartPage = () => {
   const {
@@ -46,28 +47,34 @@ const CartPage = () => {
 
   const [addresses, setAddresses] = useState<Address[] | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [isAddAddressDialogOpen, setIsAddAddressDialogOpen] = useState(false);
 
-  const fetchAddresses = async () => {
-    setLoading(true);
-    try {
-      // Filter addresses by user email and order by creation date
-      const userEmail = user?.primaryEmailAddress?.emailAddress;
-      const query = `*[_type=="address && email == "${userEmail}" ] | order(createdAt desc)`; 
-      const data = await client.fetch(query);
-      setAddresses(data);
+ const fetchAddresses = async () => {
+   setLoading(true);
+   try {
+     // Filter addresses by user email and order by creation date
+     const userEmail = user?.primaryEmailAddress?.emailAddress;
+     // Fixed query syntax
+     const query = `*[_type == "address" && email == "${userEmail}"] | order(createdAt desc)`;
+     const data = await client.fetch(query);
+     setAddresses(data);
 
-      // Find default address or use first one
-      const defaultAddress = data.find((addr: Address) => addr.isDefault);
-      if (defaultAddress) {
-        setSelectedAddress(defaultAddress);
-      } else if (data.length > 0) {
-        setSelectedAddress(data[0]);
-      }
-    } catch (error) {
-      console.log("Addresses fetching error:", error);
-    } finally {
-      setLoading(false);
-    }
+     // Find default address or use first one
+     const defaultAddress = data.find((addr: Address) => addr.isDefault);
+     if (defaultAddress) {
+       setSelectedAddress(defaultAddress);
+     } else if (data.length > 0) {
+       setSelectedAddress(data[0]);
+     }
+   } catch (error) {
+     console.log("Addresses fetching error:", error);
+   } finally {
+     setLoading(false);
+   }
+ };
+
+  const handleAddressAdded = () => {
+    fetchAddresses();
   };
 
   useEffect(() => {
@@ -330,7 +337,7 @@ const CartPage = () => {
                             </div>
                           ))}
                         </RadioGroup>
-                        <Button variant="outline" className="w-full mt-2">
+                        <Button variant="outline" className="w-full mt-2" onClick={() => setIsAddAddressDialogOpen(true)}>
                           + Add New Address
                         </Button>
                       </CardContent>
@@ -341,7 +348,7 @@ const CartPage = () => {
                         <p className="text-gray-500 mb-4">
                           No delivery addresses found.
                         </p>
-                        <Button variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full" onClick={() => setIsAddAddressDialogOpen(true)}>
                           + Add Delivery Address
                         </Button>
                       </CardContent>
@@ -355,6 +362,12 @@ const CartPage = () => {
           <EmptyCart />
         )}
       </Container>
+
+      <AddAddressDialog
+        isOpen={isAddAddressDialogOpen}
+        onClose={() => setIsAddAddressDialogOpen(false)}
+        onAddressAdded={handleAddressAdded}
+      />
     </div>
   );
 };
