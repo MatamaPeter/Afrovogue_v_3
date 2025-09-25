@@ -12,6 +12,7 @@ export interface Metadata {
   customerEmail: string;
   clerkUserId?: string;
   address?: Address | null;
+  mpesaNumber?: string;
 }
 
 export interface GroupedCartItems {

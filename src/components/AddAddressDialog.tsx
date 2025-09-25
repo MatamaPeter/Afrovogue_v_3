@@ -6,13 +6,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { writeClient } from "@/sanity/lib/client"; // Use writeClient instead
+import { writeClient } from "@/sanity/lib/client";
 import toast from "react-hot-toast";
 
 interface AddAddressDialogProps {
@@ -116,13 +115,11 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
       toast.error("Email is required");
       return false;
     }
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
       toast.error("Please enter a valid email address");
       return false;
     }
-    // Phone number validation - fixed regex
     if (!form.phone.match(/^\+254[0-9]{9}$/)) {
       toast.error(
         "Please enter a valid Kenyan phone number (e.g. +254712345678)"
@@ -162,7 +159,6 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
 
     setSubmitting(true);
     try {
-      // If setting as default, first unset other default addresses for this email
       if (form.isDefault) {
         await writeClient
           .patch({
@@ -172,7 +168,6 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
           .commit();
       }
 
-      // Create the new address
       const newAddress = {
         _type: "address",
         name: form.name,
@@ -202,23 +197,31 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
     }
   };
 
+  const handleClose = () => {
+    setForm(initialFormState);
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Add New Delivery Address</DialogTitle>
-          <DialogClose asChild>
-            <button
-              aria-label="Close"
-              className="text-gray-500 hover:text-gray-700"
-            >
-              &times;
-            </button>
-          </DialogClose>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="max-w-md max-h-[95vh] overflow-y-auto bg-white border-gray-200 shadow-xl rounded-2xl">
+        <DialogHeader className="border-b border-gray-100 pb-4">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-xl font-bold text-gray-900">
+              Add New Delivery Address
+            </DialogTitle>
+            
+          </div>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div>
-            <Label htmlFor="name">Address Name *</Label>
+
+        <form onSubmit={handleSubmit} className="space-y-6 mt-6 p-1">
+          <div className="space-y-2">
+            <Label
+              htmlFor="name"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              Address Name *
+            </Label>
             <Input
               id="name"
               name="name"
@@ -226,11 +229,17 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
               onChange={handleChange}
               placeholder="e.g. Home, Office, etc."
               required
+              className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors"
             />
           </div>
 
-          <div>
-            <Label htmlFor="email">Email *</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="email"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              Email *
+            </Label>
             <Input
               id="email"
               name="email"
@@ -239,11 +248,17 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
               onChange={handleChange}
               placeholder="your.email@example.com"
               required
+              className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors"
             />
           </div>
 
-          <div>
-            <Label htmlFor="phone">Phone Number *</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="phone"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              Phone Number *
+            </Label>
             <Input
               id="phone"
               name="phone"
@@ -251,12 +266,18 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
               onChange={handleChange}
               placeholder="+254712345678"
               required
+              className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors"
             />
             <p className="text-xs text-gray-500 mt-1">Format: +254XXXXXXXXX</p>
           </div>
 
-          <div>
-            <Label htmlFor="address">Street Address/Building *</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="address"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              Street Address/Building *
+            </Label>
             <Input
               id="address"
               name="address"
@@ -264,11 +285,17 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
               onChange={handleChange}
               placeholder="Building name, street name, house number"
               required
+              className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors"
             />
           </div>
 
-          <div>
-            <Label htmlFor="area">Area/Estate *</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="area"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              Area/Estate *
+            </Label>
             <Input
               id="area"
               name="area"
@@ -276,18 +303,24 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
               onChange={handleChange}
               placeholder="e.g. Westlands, Karen, Kilimani"
               required
+              className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors"
             />
           </div>
 
-          <div>
-            <Label htmlFor="city">City/Town *</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="city"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              City/Town *
+            </Label>
             <select
               id="city"
               name="city"
               value={form.city}
               onChange={handleChange}
               required
-              className="w-full border rounded-md p-2 focus:ring-2 focus:ring-kitenge-red focus:border-transparent"
+              className="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-kitenge-red/20 focus:border-kitenge-red transition-colors bg-white text-gray-900"
             >
               <option value="">Select City</option>
               <option value="nairobi">Nairobi</option>
@@ -308,8 +341,13 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
           </div>
 
           {form.city === "other" && (
-            <div>
-              <Label htmlFor="customCity">Custom City *</Label>
+            <div className="space-y-2">
+              <Label
+                htmlFor="customCity"
+                className="font-semibold text-gray-900 text-sm"
+              >
+                Custom City *
+              </Label>
               <Input
                 id="customCity"
                 name="customCity"
@@ -317,19 +355,25 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
                 onChange={handleChange}
                 placeholder="Enter city name"
                 required
+                className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors"
               />
             </div>
           )}
 
-          <div>
-            <Label htmlFor="county">County *</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="county"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              County *
+            </Label>
             <select
               id="county"
               name="county"
               value={form.county}
               onChange={handleChange}
               required
-              className="w-full border rounded-md p-2 focus:ring-2 focus:ring-kitenge-red focus:border-transparent"
+              className="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-kitenge-red/20 focus:border-kitenge-red transition-colors bg-white text-gray-900"
             >
               <option value="">Select County</option>
               {KENYAN_COUNTIES.map((county) => (
@@ -340,8 +384,13 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
             </select>
           </div>
 
-          <div>
-            <Label htmlFor="postalCode">Postal Code (Optional)</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="postalCode"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              Postal Code (Optional)
+            </Label>
             <Input
               id="postalCode"
               name="postalCode"
@@ -349,12 +398,18 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
               onChange={handleChange}
               placeholder="e.g. 00100"
               maxLength={5}
+              className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors"
             />
             <p className="text-xs text-gray-500 mt-1">5-digit postal code</p>
           </div>
 
-          <div>
-            <Label htmlFor="deliveryInstructions">Delivery Instructions</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="deliveryInstructions"
+              className="font-semibold text-gray-900 text-sm"
+            >
+              Delivery Instructions
+            </Label>
             <Textarea
               id="deliveryInstructions"
               name="deliveryInstructions"
@@ -362,29 +417,33 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
               onChange={handleChange}
               rows={3}
               placeholder="Any special instructions for delivery (landmarks, gate codes, etc.)"
+              className="border-gray-300 focus:border-kitenge-red focus:ring-kitenge-red/20 transition-colors resize-none"
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
             <input
               id="isDefault"
               name="isDefault"
               type="checkbox"
               checked={form.isDefault}
               onChange={handleChange}
-              className="cursor-pointer w-4 h-4 text-kitenge-red focus:ring-kitenge-red border-gray-300 rounded"
+              className="cursor-pointer w-4 h-4 text-kitenge-red focus:ring-kitenge-red border-gray-300 rounded transition-colors"
             />
-            <Label htmlFor="isDefault" className="cursor-pointer text-sm">
+            <Label
+              htmlFor="isDefault"
+              className="cursor-pointer text-sm font-medium text-gray-900"
+            >
               Set as default address
             </Label>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-4 border-t border-gray-100">
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
-              className="flex-1"
+              onClick={handleClose}
+              className="flex-1 border-gray-300 text-gray-700 hover:border-kitenge-red/50 hover:text-kitenge-red transition-colors font-medium"
               disabled={submitting}
             >
               Cancel
@@ -392,7 +451,7 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({
             <Button
               type="submit"
               disabled={submitting}
-              className="flex-1 bg-kitenge-red hover:bg-kitenge-red/90"
+              className="flex-1 bg-kitenge-red hover:bg-kitenge-red/90 text-white font-medium shadow-sm hover:shadow-md transition-all"
             >
               {submitting ? "Saving..." : "Save Address"}
             </Button>
