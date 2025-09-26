@@ -31,7 +31,6 @@ export const orderType = defineType({
       name: "stripeCustomerId",
       title: "Stripe Customer ID",
       type: "string",
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "clerkUserId",
@@ -55,7 +54,6 @@ export const orderType = defineType({
       name: "stripePaymentIntentId",
       title: "Stripe Payment Intent ID",
       type: "string",
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "products",
@@ -141,6 +139,22 @@ export const orderType = defineType({
           { title: "Cancelled", value: "cancelled" },
         ],
       },
+    }),
+    defineField({
+      name: "paidAt",
+      title: "Paid At",
+      type: "datetime",
+    }),
+    defineField({
+      name: "payment",
+      title: "Payment Details",
+      type: "object",
+      fields: [
+        defineField({ name: "method", title: "Payment Method", type: "string" }),
+        defineField({ name: "mpesaReceipt", title: "M-Pesa Receipt", type: "string" }),
+        defineField({ name: "amount", title: "Amount", type: "number" }),
+        defineField({ name: "phone", title: "Phone Number", type: "string" }),
+      ],
     }),
     defineField({
       name: "orderDate",

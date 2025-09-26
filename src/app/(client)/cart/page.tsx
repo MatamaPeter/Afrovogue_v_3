@@ -306,7 +306,7 @@ const CartPage = () => {
                           htmlFor="stripe"
                           className="cursor-pointer font-medium text-gray-900"
                         >
-                          Stripe
+                          Card
                         </Label>
                       </div>
 

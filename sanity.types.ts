@@ -191,6 +191,13 @@ export type Order = {
     name?: string;
   };
   status?: "pending" | "processing" | "paid" | "shipped" | "out_for_delivery" | "delivered" | "cancelled";
+  paidAt?: string;
+  payment?: {
+    method?: string;
+    mpesaReceipt?: string;
+    amount?: number;
+    phone?: string;
+  };
   orderDate?: string;
 };
 
@@ -697,6 +704,13 @@ export type MY_ORDERS_QUERYResult = Array<{
     name?: string;
   };
   status?: "cancelled" | "delivered" | "out_for_delivery" | "paid" | "pending" | "processing" | "shipped";
+  paidAt?: string;
+  payment?: {
+    method?: string;
+    mpesaReceipt?: string;
+    amount?: number;
+    phone?: string;
+  };
   orderDate?: string;
 }>;
 // Variable: GET_ALL_BLOG
